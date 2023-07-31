@@ -1,23 +1,42 @@
-import logo from './logo.svg';
+// App.js
+import React, { useState } from 'react';
 import './App.css';
+import UserList from './components/UserList';
+import UserForm from './components/UserForm';
+import './style.css'
 
 function App() {
+  const [users, setUsers] = useState([]);
+  const [userToEdit, setUserToEdit] = useState(null); // Add this line to define the state for userToEdit
+
+  const handleAddUser = (user) => {
+    setUsers([...users, user]);
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    const updatedUsers = users.map(user =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    setUsers(updatedUsers);
+    setUserToEdit(null); // Reset userToEdit state after updating the user
+  };
+
+  const handleEditUser = (user) => {
+    setUserToEdit(user);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <UserList
+        users={users}
+        setUsers={setUsers}
+        onEditUser={handleEditUser}
+      />
+      <UserForm
+        onAddUser={handleAddUser}
+        onUpdateUser={handleUpdateUser}
+        userToEdit={userToEdit}
+      />
     </div>
   );
 }
